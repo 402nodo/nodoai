@@ -4,23 +4,6 @@
   <strong>Multi-AI Consensus for Prediction Markets</strong>
 </p>
 
-<p align="center">
-  <a href="https://github.com/nodo-ai/nodo/actions/workflows/ci.yml">
-    <img src="https://github.com/nodo-ai/nodo/actions/workflows/ci.yml/badge.svg" alt="CI" />
-  </a>
-  <a href="https://github.com/nodo-ai/nodo/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" />
-  </a>
-  <a href="https://python.org">
-    <img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python" />
-  </a>
-  <a href="https://t.me/nodo_ai_bot">
-    <img src="https://img.shields.io/badge/Telegram-Bot-blue?logo=telegram" alt="Telegram Bot" />
-  </a>
-</p>
-
----
-
 ## 🧠 What is NODO?
 
 NODO is an AI-powered analysis platform for prediction markets. Instead of relying on a single AI model, NODO queries **6 different models** simultaneously and aggregates their responses into a **consensus verdict**.
@@ -335,5 +318,6 @@ This project is licensed under the MIT License — see [LICENSE](LICENSE) for de
 <p align="center">
   Built with 🧠 by the NODO team
 </p>
+
 
 
