@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    container_name: nodo-bot
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgresql://nodo:${DB_PASSWORD}@db:5432/nodo
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - nodo-network
+
+  db:
+    image: postgres:15-alpine
+    container_name: nodo-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: nodo
+      POSTGRES_USER: nodo
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nodo -d nodo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nodo-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: nodo-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nodo-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  nodo-network:
+    driver: bridge
+
