@@ -1,19 +1,7 @@
-<p align="center">
-  <img src="docs/assets/logo.png" alt="NODO Logo" width="120" />
-</p>
-
 <h1 align="center">NODO</h1>
 
 <p align="center">
   <strong>Multi-AI Consensus for Prediction Markets</strong>
-</p>
-
-<p align="center">
-  <a href="#features">Features</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#how-it-works">How It Works</a> •
-  <a href="#api">API</a> •
-  <a href="#documentation">Docs</a>
 </p>
 
 <p align="center">
@@ -347,4 +335,5 @@ This project is licensed under the MIT License — see [LICENSE](LICENSE) for de
 <p align="center">
   Built with 🧠 by the NODO team
 </p>
+
 
