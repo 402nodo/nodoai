@@ -72,8 +72,8 @@ When a client makes a request without sufficient balance, they receive:
       },
       {
         "type": "usdc",
-        "chain": "solana",
-        "address": "NoDo...xyz",
+        "chain": "polygon",
+        "address": "0x...",
         "amount": "0.05"
       }
     ]
@@ -155,11 +155,12 @@ def create_payment_options(self, amount: float) -> list:
             "expires_in": 600
         })
     
-    # USDC on Solana
+    # USDC on Polygon
     options.append({
         "type": "usdc",
-        "chain": "solana",
-        "address": self.solana_address,
+        "chain": "polygon",
+        "chain_id": 137,
+        "address": self.usdc_address,
         "amount": str(amount)
     })
     
@@ -193,40 +194,28 @@ async def verify_lightning_payment(self, preimage: str, expected: float):
     return {"verified": True, "amount": invoice.amount_sats}
 ```
 
-### USDC Payments (Solana)
+### USDC Payments
 
-For USDC on Solana, we verify the transaction signature:
+For USDC, we watch the blockchain for incoming transfers:
 
 ```python
-async def verify_usdc_payment(self, signature: str, expected: float):
-    """Verify USDC transfer on Solana."""
-    from solana.rpc.async_api import AsyncClient
-    from solders.signature import Signature
+async def verify_usdc_payment(self, tx_hash: str, expected: float):
+    """Verify USDC transfer on-chain."""
     
-    client = AsyncClient("https://api.mainnet-beta.solana.com")
+    # Get transaction receipt
+    receipt = await self.web3.eth.get_transaction_receipt(tx_hash)
     
-    # Get transaction
-    tx = await client.get_transaction(
-        Signature.from_string(signature),
-        encoding="jsonParsed"
-    )
-    
-    if not tx.value:
-        return {"verified": False, "error": "Transaction not found"}
-    
-    # Check transaction status
-    if tx.value.transaction.meta.err:
+    if not receipt or receipt.status != 1:
         return {"verified": False, "error": "Transaction failed"}
     
-    # Parse token transfer instructions
-    for instruction in tx.value.transaction.transaction.message.instructions:
-        if hasattr(instruction, 'parsed'):
-            info = instruction.parsed.get('info', {})
-            if (info.get('destination') == self.token_account and
-                info.get('mint') == USDC_MINT):
-                amount = int(info.get('amount', 0)) / 1e6  # USDC has 6 decimals
-                if amount >= expected:
-                    return {"verified": True, "amount": amount}
+    # Parse Transfer event
+    transfers = self.usdc_contract.events.Transfer().process_receipt(receipt)
+    
+    for transfer in transfers:
+        if transfer.args.to.lower() == self.address.lower():
+            amount = transfer.args.value / 1e6  # USDC has 6 decimals
+            if amount >= expected:
+                return {"verified": True, "amount": amount}
     
     return {"verified": False, "error": "No matching transfer found"}
 ```

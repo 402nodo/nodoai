@@ -92,8 +92,8 @@ User Request → Check Balance → Process → Response
 
 ### Payment Methods
 
-- **USDC on Solana**: Instant (~400ms), ultra-low fees (~$0.00025), works with Phantom, Solflare
-- **Lightning Network**: Instant, <$0.001 fees, Bitcoin-native
+- **Lightning Network**: Instant, <$0.001 fees, crypto-native
+- **USDC**: Stablecoin on Polygon/Base, familiar to DeFi users
 - **Stripe**: Credit cards for traditional users
 
 ---
